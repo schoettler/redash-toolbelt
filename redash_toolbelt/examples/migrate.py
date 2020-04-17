@@ -53,6 +53,7 @@ def api_request(api):
 
     return response.json()
 
+
 def get_paginated_resource(resource, api_key):
     objects = []
     headers = {'Authorization': 'Key {}'.format(api_key)}
@@ -65,7 +66,7 @@ def get_paginated_resource(resource, api_key):
         has_more = page * response['page_size'] + 1 <= response['count']
         page += 1
 
-    return objects 
+    return objects
 
 
 def get_queries(url, api_key):
@@ -105,7 +106,7 @@ def import_users():
         meta['users'][user['id']] = {
             'id': new_user['id'],
             'email': new_user['email'],
-            'invite_link': "" # new_user['invite_link']
+            'invite_link': ""  # new_user['invite_link']
         }
 
 
@@ -127,7 +128,7 @@ def user_with_api_key(user_id):
 def convert_schedule(schedule):
     if schedule is None:
         return schedule
-    
+
     if isinstance(schedule, dict):
         return schedule
 
@@ -182,7 +183,8 @@ def import_queries():
         meta['queries'][query['id']] = new_query_id
 
         if not query['is_draft']:
-            response = requests.post(DESTINATION + '/api/queries/' + str(new_query_id), json={'is_draft': False}, headers=auth_headers(user['api_key']))
+            response = requests.post(DESTINATION + '/api/queries/' + str(new_query_id), json={
+                                     'is_draft': False}, headers=auth_headers(user['api_key']))
             response.raise_for_status()
 
 
@@ -225,7 +227,8 @@ def import_visualizations():
 def import_dashboards():
     print("Importing dashboards...")
 
-    dashboards = get_paginated_resource(ORIGIN + '/api/dashboards', ORIGIN_API_KEY)
+    dashboards = get_paginated_resource(
+        ORIGIN + '/api/dashboards', ORIGIN_API_KEY)
 
     for dashboard in dashboards:
         print("   importing: {}".format(dashboard['slug']))
@@ -283,7 +286,8 @@ def fix_queries():
                 p['queryId'] = meta['queries'].get(str(p['queryId']))
 
         user = user_with_api_key(query['user']['id'])
-        response = requests.post(DESTINATION + '/api/queries/' + str(new_query_id), json={'options': options}, headers=auth_headers(user['api_key']))
+        response = requests.post(DESTINATION + '/api/queries/' + str(new_query_id), json={
+                                 'options': options}, headers=auth_headers(user['api_key']))
         response.raise_for_status()
 
 
