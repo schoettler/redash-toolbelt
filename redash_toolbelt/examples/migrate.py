@@ -1,9 +1,9 @@
 # Copied from https://gist.github.com/arikfr/2c7d09f6837b256c58a3d3ef6a97f61a
-
 import json
-import requests
 import logging
 import sys
+
+import requests
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger("requests").setLevel("ERROR")
