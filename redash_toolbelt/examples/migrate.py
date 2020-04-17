@@ -22,12 +22,18 @@ DATA_SOURCES = {
     1: 1234,
 }
 
-
 meta = {
     # include here any users you already created in the target Redash account.
     # the key is the user id in the origin Redash instance. make sure to include the API key, as it used to recreate any objects
     # this user might have owned.
-    "users": {"1": {"id": "", "email": "", "invite_link": "", "api_key": ""},},
+    "users": {
+        "1": {
+            "id": "",
+            "email": "",
+            "invite_link": "",
+            "api_key": ""
+        },
+    },
     "queries": {},
     "visualizations": {},
     "dashboards": {},
@@ -51,7 +57,11 @@ def get_paginated_resource(resource, api_key):
     has_more = True
     page = 1
     while has_more:
-        response = requests.get(resource, headers=headers, params={"page": page}).json()
+        response = requests.get(resource,
+                                headers=headers,
+                                params={
+                                    "page": page
+                                }).json()
         objects.extend(response["results"])
         has_more = page * response["page_size"] + 1 <= response["count"]
         page += 1
@@ -124,7 +134,12 @@ def convert_schedule(schedule):
     if isinstance(schedule, dict):
         return schedule
 
-    schedule_json = {"interval": None, "until": None, "day_of_week": None, "time": None}
+    schedule_json = {
+        "interval": None,
+        "until": None,
+        "day_of_week": None,
+        "time": None
+    }
 
     if ":" in schedule:
         schedule_json["interval"] = 86400
@@ -225,7 +240,8 @@ def import_visualizations():
 def import_dashboards():
     print("Importing dashboards...")
 
-    dashboards = get_paginated_resource(ORIGIN + "/api/dashboards", ORIGIN_API_KEY)
+    dashboards = get_paginated_resource(ORIGIN + "/api/dashboards",
+                                        ORIGIN_API_KEY)
 
     for dashboard in dashboards:
         print("   importing: {}".format(dashboard["slug"]))
@@ -261,8 +277,7 @@ def import_dashboards():
 
             if "visualization" in widget:
                 data["visualization_id"] = meta["visualizations"].get(
-                    str(widget["visualization"]["id"])
-                )
+                    str(widget["visualization"]["id"]))
 
             if "visualization" in widget and not data["visualization_id"]:
                 print("skipping for missing viz")
