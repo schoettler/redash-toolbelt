@@ -18,6 +18,10 @@ class Redash(object):
         """GET api/queries"""
         return self._get('api/queries', params=dict(page=page, page_size=page_size)).json()
 
+    def users(self, page=1, page_size=25):
+        """GET api/users"""
+        return self._get('api/users', params=dict(page=page, page_size=page_size)).json()
+
     def dashboards(self, page=1, page_size=25):
         """GET api/dashboards"""
         return self._get('api/dashboards', params=dict(page=page, page_size=page_size)).json()
