@@ -13,6 +13,7 @@ Last Updated At: {last_updated_at}
 
 def save_queries(queries):
     for query in queries:
+        print(query)
         filename = "query_{}.sql".format(query["id"])
         with open(filename, "w") as f:
             content = template.format(
