@@ -32,7 +32,6 @@ def post_remote(target_redash_url, api_key, query):
         "query": query,
         "name": query["name"],
         "data_source_id": query["data_source_id"],
-        "schedule": None,
         "options": {"parameters":[]}
     }
     res = requests.post(
